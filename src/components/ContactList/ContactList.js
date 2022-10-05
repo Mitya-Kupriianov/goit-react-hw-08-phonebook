@@ -15,8 +15,10 @@ export default function ContactList() {
             ? contact.name.toLowerCase().includes(filter.toLowerCase())
             : true;
         })
-        .map(({ id, name, phone }) => {
-          return <ContactListItem key={id} name={name} phone={phone} id={id} />;
+        .map(({ id, name, number }) => {
+          return (
+            <ContactListItem key={id} name={name} number={number} id={id} />
+          );
         })}
     </ul>
   );

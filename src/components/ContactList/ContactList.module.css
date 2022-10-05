@@ -2,7 +2,8 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  min-width: 400px;
+  align-items: flex-end;
+  min-width: 320px;
   margin-bottom: 10px;
   font-size: 22px;
 }

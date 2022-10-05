@@ -8,6 +8,7 @@
   width: 300px;
   height: 40px;
   margin-top: 20px;
-  border: 1px solid #68a2e0;
+  border: 1px solid greenyellow;
   border-radius: 2px;
+  background-color: inherit;
 }

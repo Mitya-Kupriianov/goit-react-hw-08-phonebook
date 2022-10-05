@@ -1,46 +1,117 @@
 import { useEffect } from 'react';
-import ContactForm from './ContactForm';
-import ContactList from './ContactList';
-import Filter from './Filter';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectContacts, selectIsLoading, selectError } from 'redux/selectors';
-import { fetchContacts } from 'redux/operations';
+import { useDispatch, useSelector } from 'react-redux';
+import Container from './Container/index';
+import { PrivateRoute } from './PrivateRoute';
+import { PublicRoute } from './PublicRoute';
+import { refreshUser } from 'redux/auth/operations';
+
+import { selectIsRefreshing } from 'redux/auth/selectors';
+import { Route, Routes } from 'react-router-dom';
+import { Layout } from './Layout';
+import Home from 'pages/Home';
+import Contacts from 'pages/Contacts';
+import Register from 'pages/Register';
+import Login from 'pages/Login';
 import Loader from './Loader/Loader';
+
+// const Home = lazy(() => import('../pages/Home'));
+// const Register = lazy(() => import('../pages/Register'));
+// const Login = lazy(() => import('../pages/Login'));
+// const Contacts = lazy(() => import('../pages/Contacts'));
 
 export default function App() {
   const dispatch = useDispatch();
-  const contacts = useSelector(selectContacts);
-  const isLoading = useSelector(selectIsLoading);
-  const error = useSelector(selectError);
+  const isFetchingCurrentUser = useSelector(selectIsRefreshing);
 
   useEffect(() => {
-    dispatch(fetchContacts());
+    dispatch(refreshUser());
   }, [dispatch]);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101',
-      }}
-    >
-      <h1>Phonebook</h1>
-      <ContactForm />
-      <h2>Contacts</h2>
-      {error && <h2>Error...</h2>}
-      {isLoading && <Loader />}
-      {contacts.length > 0 ? (
-        <>
-          <Filter name="filter" />
-          <ContactList />
-        </>
+    <Container>
+      {isFetchingCurrentUser ? (
+        <Loader />
       ) : (
-        <h2>You have not added contacts yet</h2>
+        <>
+          {/* <Suspense fallback={<Loader />}> */}
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route
+                index
+                element={
+                  <PublicRoute>
+                    <Home />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="contacts"
+                element={
+                  <PrivateRoute>
+                    <Contacts />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="register"
+                element={
+                  <PublicRoute restricted>
+                    <Register />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="login"
+                element={
+                  <PublicRoute restricted>
+                    <Login />
+                  </PublicRoute>
+                }
+              />
+            </Route>
+          </Routes>
+          {/* </Suspense> */}
+        </>
       )}
-    </div>
+    </Container>
+
+    // <Container>
+    //   <Routes>
+    //     <Route path="/" element={<Layout />}>
+    //       <Route
+    //         index
+    //         element={
+    //           <PublicRoute>
+    //             <Home />
+    //           </PublicRoute>
+    //         }
+    //       />
+    //       <Route
+    //         path="contacts"
+    //         element={
+    //           <PrivateRoute>
+    //             <Contacts />
+    //           </PrivateRoute>
+    //         }
+    //       />
+    //       <Route
+    //         path="register"
+    //         element={
+    //           <PublicRoute restricted>
+    //             <Register />
+    //           </PublicRoute>
+    //         }
+    //       />
+    //       <Route
+    //         path="login"
+    //         element={
+    //           <PublicRoute restricted>
+    //             <Login />
+    //           </PublicRoute>
+    //         }
+    //       />
+    //     </Route>
+    //   </Routes>
+    // </Container>
   );
 }

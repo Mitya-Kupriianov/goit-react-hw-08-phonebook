@@ -10,7 +10,7 @@ export default function ContactForm() {
   const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [number, setNumber] = useState('');
 
   const handleChange = e => {
     const { name, value } = e.currentTarget;
@@ -18,8 +18,8 @@ export default function ContactForm() {
       case 'name':
         setName(value);
         break;
-      case 'phone':
-        setPhone(value);
+      case 'number':
+        setNumber(value);
         break;
       default:
         return;
@@ -27,7 +27,7 @@ export default function ContactForm() {
   };
   const reset = () => {
     setName('');
-    setPhone('');
+    setNumber('');
   };
 
   const handleSubmit = e => {
@@ -37,11 +37,10 @@ export default function ContactForm() {
         contact => contact.name.toLowerCase() === name.toLowerCase()
       )
     ) {
-      // const queryContacts = contacts.
       return alert(`${name} is already in contacts.`);
     }
 
-    const newContact = { id: nanoid(), name, phone };
+    const newContact = { id: nanoid(), name, number };
     dispatch(addContact(newContact));
     reset();
   };
@@ -62,13 +61,13 @@ export default function ContactForm() {
         />
       </label>
       <label className={s.label}>
-        Phone
+        Number
         <input
           className={s.input}
           onChange={handleChange}
-          value={phone}
+          value={number}
           type="tel"
-          name="phone"
+          name="number"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
